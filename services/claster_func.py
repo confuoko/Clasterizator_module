@@ -1,3 +1,4 @@
+import torch
 from transformers import AutoTokenizer, AutoModelForTokenClassification,  pipeline
 
 id_to_label = {0: 'DOC', 1: 'MDT', 2: 'NAME', 3: 'O', 4: 'ORG', 5: 'POS', 6: 'TEL', 7: 'VOL'}
@@ -7,8 +8,10 @@ model_path = "services/ner-model-2.0"
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForTokenClassification.from_pretrained(model_path)
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
 # Создаём пайплайн NER
-ner_pipeline = pipeline("ner", model=model, tokenizer=tokenizer)
+ner_pipeline = pipeline("ner", model=model, tokenizer=tokenizer, device=device)
 
 
 def parse_result(results):
